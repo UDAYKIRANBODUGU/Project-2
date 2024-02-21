@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<title>Registration Form</title>
+</head>
+<style>
+	* {
+		box-sizing: border-box;
+	}
+
+	body {
+		font-family: Arial, sans-serif;
+		background: linear-gradient(to right bottom, #fbdb89, #f48982);
+		/* Light gray background */
+		margin: 0;
+		padding: 0;
+	}
+
+	.container {
+		width: 65%;
+		margin: 50px auto;
+		background-color: #ffffff;
+		/* White background */
+		padding: 20px;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		/* Slightly rounded corners */
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		/* Box shadow for a subtle lift */
+	}
+
+	h1 {
+		text-align: center;
+		margin-bottom: 30px;
+		color: #333333;
+		/* Dark gray text color */
+	}
+
+	label {
+		display: block;
+		margin-bottom: 8px;
+		color: #555555;
+		/* Medium gray text color */
+	}
+
+	input,
+	select {
+		width: 100%;
+		padding: 10px;
+		margin-bottom: 15px;
+		border: 1px solid #999999;
+		/* Darker gray border */
+		border-radius: 6px;
+	}
+
+	.agree-term {
+		display: flex;
+		align-items: center;
+		margin-top: 15px;
+	}
+
+	.agree-term input {
+		margin-right: 8px;
+	}
+
+	button {
+		background-color: #009688;
+		/* Teal color */
+		color: white;
+		padding: 12px 24px;
+		border: none;
+		border-radius: 6px;
+		cursor: pointer;
+		width: 100%;
+	}
+
+	button:hover {
+		background-color: #00796b;
+		/* Darker teal color on hover */
+	}
+
+	.account-question {
+		text-align: center;
+		margin-top: 25px;
+		color: #333333;
+		/* Dark gray text color */
+	}
+
+	.account-question a {
+		color: #009688;
+		/* Teal color for the link */
+		text-decoration: none;
+	}
+
+	/* Additional styles */
+	.container {
+		background-color: #f0f0f0;
+	}
+
+	h1 {
+		color: #333333;
+	}
+
+	label {
+		color: #555555;
+	}
+
+	input,
+	select {
+		border: 1px solid #999999;
+	}
+
+	button {
+		background-color: #009688;
+		color: white;
+	}
+
+	button:hover {
+		background-color: #00796b;
+	}
+
+	.account-question {
+		color: #333333;
+	}
+
+	.account-question a {
+		color: #009688;
+	}
+</style>
+
+<body>
+	<div class="container">
+		<h1>Register Here</h1>
+
+		<font style="color: red;">
+			<p th:text="${errmsg}"></p>
+		</font>
+
+
+		<font style="color:green;">
+			<p th:text="${smsg}"></p>
+		</font>
+
+		<body>
+			<div class="container">
+				<h2>User Registration</h2>
+				<form action="/register" method="post" th:object="${registerfrom}">
+					<label for="name">Name:</label>
+					<input type="text" id="name" th:field="*{username}" name="name" required>
+
+					<label for="email">Email:</label>
+					<input type="email" id="email" th:field="*{userEmail}" name="email" required>
+
+					<label for="country">Country:</label>
+					<select th:field="*{CountryId}" id="countryId" class="form-select" required>
+						<option value="">-Select-</option>
+						<option th:each="entry : ${countries}" th:value="${entry.key}" th:text="${entry.value}">
+						</option>
+					</select>
+
+					<label for="state">State:</label>
+					<select th:field="*{StateId}" id="stateId" class="form-select" required>
+						<option value="">-Select-</option>
+						<!-- State options will be added dynamically via JavaScript -->
+					</select>
+
+					<label for="city">City:</label>
+					<select th:field="*{CityId}" id="cityId" name="cityId" class="form-select" required>
+						<option value="">-Select-</option>
+					</select>
+
+					<button type="submit">Sign-Up</button>
+
+
+				</form>
+
+				<p class="account-question">Already have an account? <a href="/">Sign-In Here</a></p>
+			</div>
+		</body>
+		<script>
+			$(document).ready(function () {
+				$('#countryId').on("change", function () {
+					$("#stateId").empty();
+					$("#cityId").empty();
+					$.ajax({
+						type: 'GET',
+						url: '/getstates',
+						data: {country_id: $('#countryId').val()},
+						success: function (result) {
+							$.each(result, function (key, value) {
+								console.log(result);
+								$('<option>').val(key).text(value).appendTo("#stateId");
+							});
+						}
+					});
+				});
+
+				$('#stateId').on("change", function () {
+					$("#cityId").empty();
+					$.ajax({
+						type: 'GET',
+						url: '/getcities',
+						data: {State_id: $('#stateId').val()},
+						success: function (result) {
+							$.each(result, function (key, value) {
+								$('<option>').val(key).text(value).appendTo("#cityId");
+							});
+						}
+					});
+				});
+			});
+		</script>
+
+
+</html>

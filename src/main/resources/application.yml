@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/jrtp25
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  mvc:
+    view:
+      prefix: '/templates/'
+      suffix: '.html'
+
+  # SMTP PROPS
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: udaykiran87126@gmail.com
+    password: 'eeur whqr vnhc dzam'
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+app:
+ messages:
+  InvalidDeatils:Invalid Credentials
+  InvalidPwd:Pwd update failed
+  pwdUpdateFailed:Pwd update failed
+  RegisterFailed:Registration Failed
+  RegisterSucess:Register Details Successful
+  QUOTE_URL:https://type.fit/api/quotes
+  
+
+    
+            
+            
